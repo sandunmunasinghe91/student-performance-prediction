@@ -17,14 +17,15 @@ from src.utils import save_object
 class DataTransformationConfig:
     '''Store file path configuration for the preprocessing pipeline'''
 
-    preprocessor_obj_file_path = os.path.join("artifacts","preprocessor.pkl")
+    preprocessor_obj_file_path : str = os.path.join("artifacts","preprocessor.pkl")
 
 class DataTransformation:
     def __init__(self):
         self.datatransformation_config = DataTransformationConfig()
 
-    try:
-        def get_data_transformer_object(self):
+   
+    def get_data_transformer_object(self):
+        try:
             "This function is responsible for data transformation"
             
             num_columns = ["reading_score","writing_score"]
@@ -61,13 +62,13 @@ class DataTransformation:
                 ]
             )
             return preprocessor
-    except Exception as e:
-        CustomException(e,sys)
+        except Exception as e:
+            CustomException(e,sys)
     
-    def initiate_data_transformation(self,train_data_path,test_data_path):
+    def initiate_data_transformation(self,train_path,test_path):
         try:
-            train_df = pd.read_csv(train_data_path)
-            test_df = pd.read_csv(test_data_path)
+            train_df = pd.read_csv(train_path)
+            test_df = pd.read_csv(test_path)
 
             logging.info("Read train and test data complete.")
             logging.info("Obtaining preprocessing object.")
@@ -75,7 +76,7 @@ class DataTransformation:
             preprocessing_obj = self.get_data_transformer_object()
 
             target_column_name = "math_score"
-            num_columns = ["reading_score","writing_score"]
+            
 
             input_feature_train_df = train_df.drop(columns=[target_column_name],axis=1)
             target_feature_train_df = train_df[target_column_name]
